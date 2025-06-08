@@ -60,12 +60,14 @@ export function App() {
             value: item.id,
             label: `${item.firstName} ${item.lastName}`,
           })}
+          // Bug 3 fix : Instead of doing nothing when the value is null or if the id is an empty string < I load all trasactions
           onChange={async (newValue) => {
-            if (newValue === null) {
-              return
-            }
-
+            if (newValue === null || newValue.id === "") {
+              await loadAllTransactions()
+            } 
+            else {
             await loadTransactionsByEmployee(newValue.id)
+            }
           }}
         />
 
