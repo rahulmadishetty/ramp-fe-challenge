@@ -54,10 +54,15 @@ export function App() {
           items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
           label="Filter by employee"
           loadingLabel="Loading employees"
-          parseItem={(item) => ({
+          parseItem={(item) => {
+            if (item === null || item.id === "") {
+            return { value: "", label: "All Employees" }
+          }
+          return {
             value: item.id,
             label: `${item.firstName} ${item.lastName}`,
-          })}
+          }
+          }}
           // Bug 3 fix : Instead of doing nothing when the value is null or if the id is an empty string < I load all trasactions
           onChange={async (newValue) => {
             if (newValue === null || newValue.id === "") {
@@ -74,7 +79,9 @@ export function App() {
         <div className="RampGrid">
           <Transactions transactions={transactions} />
 
-          {transactions !== null && (
+          {/* Bug 6  fixed - Here the View More button is shown only if there are more transactions */}
+          {paginatedTransactions !== null &&
+            paginatedTransactions.nextPage !== null && (
             <button
               className="RampButton"
               disabled={paginatedTransactionsUtils.loading}
